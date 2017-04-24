@@ -134,34 +134,59 @@
 
         <!--左侧一级列表-->
         <div class="pull-left list-left">
-            <div class="list-left-title">商会信息</div>
-            <div class="list-left-content"><a href="#">商会动态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;></a></div>
-            <div class="list-left-content"><a href="#">政策法规&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;></a></div>
+            <div class="list-left-title">
+                <vt:function var='getParentName1' type='$pageMethod' method='getItemName' args='$topitemid'
+                             output='true' />
+            </div>
+            <vt:function var="topNav" type="$pageMethod" method="getChildItemList" args="19" args="$topitemid" />
+            <vt:foreach from="$topNav" item="item" index="i">
+            <div class="list-left-content">
+                <a lx='{$item.itemid}' href="<vt:if var='item.ItemLink' value='' compare='<>'>
+                    {$item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$item.NewsPath}/p_1.html</vt:if>"
+                   title="{$item.ItemName}">{$item.ItemName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;></a>
+            </div>
+            </vt:foreach>
+
+
+            <vt:function var="itemName" type="$pageMethod" method="getItemName" args="$topitemid" />
+            <div class="list-left-title">{$itemName}</div>
+            <ul class="list_news_right_nav_ul">
+                <vt:function var="navsub2" type="$pageMethod" method="getChildItemList" args="17" args="$topitemid" />
+                <vt:foreach from="$navsub2" item="navsub2item" index="i">
+                    <vt:function var="isParent" type="$pageMethod" method="IsParentItem" args="$navsub2item.ItemId" />
+                    <vt:if var="isParent" value="true" compare="==">
+                        <li id="item{$navsub2item.ItemId}"><span>{$navsub2item.ItemName}</span></li>
+                        <ul class="list_news_right_nav_ul_sub_ul"  id="subitem{$navsub2item.ItemId}">
+                            <vt:function var="navsub3" type="$pageMethod" method="getChildItemList" args="17" args="$navsub2item.ItemId" />
+                            <vt:foreach from="$navsub3" item="navsub3item">
+                                <li<vt:if var="navsub3item.ItemId" value="$itemid" compare="=="> class="subcur"</vt:if> pid="sub{$navsub2item.ItemId}" id="sub{$navsub3item.ItemId}"><a href="<vt:if var='navsub3item.ItemLink' value='' compare='<>'>{$navsub3item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$navsub3item.NewsPath}/p_1.html</vt:if>" title="{$navsub3item.ItemName}"<vt:if var="navsub3item.IsBlank" value="False" compare="=="><vt:else /> target="_blank"</vt:if>>{$navsub3item.ItemName}</a></li>
+                            </vt:foreach>
+                        </ul>
+                        <vt:else/>
+                        <li id="item{$navsub2item.ItemId}"<vt:if var="navsub2item.ItemId" value="$itemid" compare="==">  class="cur"</vt:if>><span><a href="<vt:if var='navsub2item.ItemLink' value='' compare='<>'>{$navsub2item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$navsub2item.NewsPath}/p_1.html</vt:if>" title="{$navsub2item.ItemName}"<vt:if var="navsub2item.IsBlank" value="False" compare="=="><vt:else /> target="_blank"</vt:if>>{$navsub2item.ItemName}</a></span></li>
+                    </vt:if>
+                </vt:foreach>
+            </ul>
+
+
         </div>
 
         <!--右侧二级列表标题-->
         <div class="pull-left list-right">
             <div class="list-right-nav">
-                <div class="pull-left list-right-title">商会动态</div>
+                <div class="pull-left list-right-title"><vt:function var="navlist1" type="$pageMethod" method="getColoumLocationById" args="$itemid" args="$WebPath" output="true" /></div>
                 <div class="pull-right list-right-a">
                     当前位置：<a>首页</a>&nbsp;&nbsp;/&nbsp;&nbsp;<a href="#">商会信息</a>&nbsp;&nbsp;/&nbsp;&nbsp;<span style="color:#666666">商会动态</span>
                 </div>
             </div>
             <div class="list-right-content">
                 <ul class="list-right-list">
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
-                    <li><a href="#">真情关爱贫困家庭区委统战部、区工商联</a><span class="pull-right">12-25</span></li>
+                    <vt:function var="newslist" type="$pageMethod" method="getPageNewsList" args="$siteid"
+                                 args="$itemid" args="$pagesize" args="$curpage" />
+                    <vt:foreach item="news" from="$newslist" index="i">
+                        <li><a title="{$news.Title}" target="_blank" href="<vt:if var="news.OutUrl" value='' compare='<>'>{$news.OutUrl}<vt:else />{$WebPath}/WebSite/{$siteid}/news/{$news.NewsId}.html</vt:if>">{$news.Title length="80"}</a>
+                            <span  class="pull-right">{$news.createtm format="yyyy-MM-dd"}</span></li>
+                    </vt:foreach>
                 </ul>
             </div>
 
