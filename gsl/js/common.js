@@ -2,6 +2,7 @@ $('.menu1.dropdown').mouseover(function() {
     $(this).addClass('open'); $(this).children().attr("aria-expanded","true")   })
     .mouseout(function() {        $(this).removeClass('open'); $(this).children().attr("aria-expanded","false");   });
 
+
 $(".dongtaiNav li").click(function(){
     $(".dongtaiNav li").removeClass('active');
     $("#tab div").removeClass("active");

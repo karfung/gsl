@@ -1,0 +1,239 @@
+<div class="list">
+    <div class="leftContent">
+        <ul>
+            <li class="lifirst">
+                <vt:function var='getParentName1' type='$pageMethod' method='getItemName' args='$topitemid'
+                             output='true' />
+            </li>
+
+            <vt:function var="topNav" type="$pageMethod" method="getChildItemList" args="19" args="$topitemid" />
+            <vt:foreach from="$topNav" item="item" index="i">
+
+                <li>
+                    <a lx='{$item.itemid}' href="<vt:if var='item.ItemLink' value='' compare='<>'>
+                    {$item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$item.NewsPath}/p_1.html</vt:if>"
+                       title="{$item.ItemName}">{$item.ItemName}</a>
+                </li>
+            </vt:foreach>
+        </ul>
+    </div>
+    <div class="rightContent">
+        <div class="rightTitle"> <vt:function var="navlist1" type="$pageMethod" method="getColoumLocationById" args="$itemid"
+                                              args="$WebPath" output="true" /></div>
+        <ul>
+            <vt:function var="newslist" type="$pageMethod" method="getPageNewsList" args="$siteid"
+                         args="$itemid" args="$pagesize" args="$curpage" />
+            <vt:foreach item="news" from="$newslist" index="i">
+                <li><a title="{$news.Title}" target="_blank" href="<vt:if var="news.OutUrl" value='' compare='<>'>{$news.OutUrl}<vt:else />{$WebPath}/WebSite/{$siteid}/news/{$news.NewsId}.html</vt:if>">{$news.Title length="80"}</a>
+                    <span>{$news.createtm format="yyyy-MM-dd"}</span></li>
+            </vt:foreach>
+        </ul>
+        <div class="fenye">
+            <div class="pagination" id="Pagination">
+                <!-- 这里显示分页 -->
+            </div>
+            <div id="message" style="font-size: 15px">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="detail">
+    <div  class="position">
+        <vt:function var="navlist1" type="$pageMethod" method="getColoumLocationById" args="$news.itemid"
+                     args="$WebPath" output="true" />
+    </div>
+
+
+    <div class="content">
+
+        <h2 >{$news.title}</h2>
+        <p><vt:if var="news.shorttitle" value="" compare="<>">——{$news.shorttitle}</vt:if></p>
+        <div class="fabuInfo">
+
+            <vt:if var="news.newsfrom" value="" compare="<>">文章出处：{$news.newsfrom}&nbsp;&nbsp;&nbsp;&nbsp;</vt:if> <vt:if var="news.writer" value="" compare="<>">作者：{$news.writer}&nbsp;&nbsp;&nbsp;&nbsp;</vt:if>发布时间：{$news.createtm format="yyyy-MM-dd"}
+        </div>
+        <div class="ct">
+            {$news.newscontent}
+        </div>
+    </div>
+    <div  style="clear:both" ></div>
+    <!-- nlist_right end -->
+</div>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <vt:function var="title" type="$pageMethod" method="getItemName" args="$itemid" />
+    <title>{$title}-{$SiteTitle}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="{$WebPath}/Tjzx/style/public.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{$WebPath}/Tjzx/style/yx_rotaion.css" />
+    <link href="{$WebPath}/Tjzx/style/list.css" rel="stylesheet" />
+    <link href="{$WebPath}/Tjzx/style/pagination.css" rel="stylesheet" />
+
+    <link href="{$WebPath}/PjGsl/css/common.css" rel="stylesheet" type="text/css" />
+    <link href="{$WebPath}/PjGsl/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="{$WebPath}/PjGsl/js/jquery.min.js" type="text/javascript"></script>
+    <script src="{$WebPath}/PjGsl/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{$WebPath}/PjGsl/js/html5shiv.min.js"></script>
+    <script src="{$WebPath}/PjGsl/js/respond.min.js"></script>
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script src="{$WebPath}/PjGsl/js/html5shiv.min.js" type="text/javascript"></script>
+    <script src="{$WebPath}/PjGsl/js/selectivizr.js" type="text/javascript"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="{$WebPath}/Tjzx/js/jquery.js"></script>
+    <script type="text/javascript" src="{$WebPath}/Tjzx/js/jquery.SuperSlide.js"></script>
+
+    <script src="{$WebPath}/Tjzx/js/jquery.pagination.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var newsCount=<vt:function var='getParentName1' type='$pageMethod' method='getNewsCount' args='$itemId' output='true' />
+
+            if(newsCount<={$pagesize})
+            {
+                $("#Pagination").hide();
+            }
+
+            if(newsCount==0)
+            {
+                $("#message").html("暂无信息！");
+
+            }
+
+
+
+            var initPagination = function() {
+                $("#Pagination").pagination({$recordcount}, {
+                    num_edge_entries: 4, //边缘页数
+                    num_display_entries: 4, //主体页数
+                    callback: pageselectCallback,
+                    items_per_page:{$pagesize}, //每页显示1项
+                    current_page:{$curpage}-1,
+                    prev_text:"上一页",
+                    next_text:"下一页"
+                });
+            }();
+            function pageselectCallback(page_index, jq){
+                if(page_index!={$curpage}-1){
+                    page_index++;
+                    location.href='p_'+page_index+'.html';
+                }
+                return false;
+            }
+
+            $(".leftContent ul li:not(:first)").click(function(){
+                $(this).addClass("active").siblings().removeClass("active");
+            });
+
+            $("[lx]").each(function (n) {
+                var id = $(this).attr("lx");
+                if ({$itemid} == id) {
+                    $(this).removeClass();
+                    $(this).css("color","#890505");
+                }
+            });
+
+
+
+        });
+    </script>
+
+</head>
+<body style="">
+<!--顶部开始-->
+<vt:include name="header" file="{$SiteFilePath}/header.tpl" />
+<!--顶部结束-->
+
+<div style=" background-color: rgb(247,247,247);">
+    <div class="content">
+
+        <!--左侧一级列表-->
+        <div class="pull-left list-left">
+            <div class="list-left-title">
+                <vt:function var='getParentName1' type='$pageMethod' method='getItemName' args='$topitemid' output='true' />
+            </div>
+            <vt:function var="navsub2" type="$pageMethod" method="getChildItemList" args="17" args="$topitemid" />
+            <vt:foreach from="$navsub2" item="navsub2item" index="i">
+                <vt:function var="isParent" type="$pageMethod" method="IsParentItem" args="$navsub2item.ItemId" />
+                <vt:if var="isParent" value="true" compare="==">
+                    <li id="item{$navsub2item.ItemId}"><span>{$navsub2item.ItemName}</span></li>
+                    <ul class="list_news_right_nav_ul_sub_ul"  id="subitem{$navsub2item.ItemId}">
+                        <vt:function var="navsub3" type="$pageMethod" method="getChildItemList" args="17" args="$navsub2item.ItemId" />
+                        <vt:foreach from="$navsub3" item="navsub3item">
+                            <li<vt:if var="navsub3item.ItemId" value="$itemid" compare="=="> class="subcur"</vt:if> pid="sub{$navsub2item.ItemId}" id="sub{$navsub3item.ItemId}"><a href="<vt:if var='navsub3item.ItemLink' value='' compare='<>'>{$navsub3item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$navsub3item.NewsPath}/p_1.html</vt:if>" title="{$navsub3item.ItemName}"<vt:if var="navsub3item.IsBlank" value="False" compare="=="><vt:else /> target="_blank"</vt:if>>{$navsub3item.ItemName}</a></li>
+                        </vt:foreach>
+                    </ul>
+                    <vt:else/>
+                    <li id="item{$navsub2item.ItemId}"<vt:if var="navsub2item.ItemId" value="$itemid" compare="==">  class="cur"</vt:if>><span><a href="<vt:if var='navsub2item.ItemLink' value='' compare='<>'>{$navsub2item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$navsub2item.NewsPath}/p_1.html</vt:if>" title="{$navsub2item.ItemName}"<vt:if var="navsub2item.IsBlank" value="False" compare="=="><vt:else /> target="_blank"</vt:if>>{$navsub2item.ItemName}</a></span></li>
+                </vt:if>
+            </vt:foreach>
+
+                <!--<div class="list-left-content">
+                    <a href="<vt:if var='navsub2item.ItemLink' value='' compare='<>'>{$navsub2item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$navsub2item.NewsPath}/p_1.html</vt:if>" title="{$navsub2item.ItemName}"<vt:if var="navsub2item.IsBlank" value="False" compare="=="><vt:else /> target="_blank"</vt:if>>{$navsub2item.ItemName}</a>
+                    <a href="<vt:if var='navsub2item.ItemLink' value='' compare='<>'>{$navsub2item.ItemLink}<vt:else />{$WebPath}/WebSite/{$siteid}/{$navsub2item.NewsPath}/p_1.html</vt:if>" title="{$navsub2item.ItemName}"<vt:if var="navsub2item.IsBlank" value="False" compare="=="><vt:else /> target="_blank"</vt:if>>{$navsub2item.ItemName}</a>
+
+                </div>-->
+
+        </div>
+
+        <!--右侧二级列表标题-->
+        <div class="pull-left list-right">
+            <div class="list-right-nav">
+                <div class="pull-left list-right-title"><vt:function var="itemName" type="$pageMethod" method="getItemName" args="$topitemid" />{$itemName}</div>
+                <div class="pull-right list-right-a">
+                    当前位置：<vt:function var="navlist1" type="$pageMethod" method="getColoumLocationById" args="$itemid" args="$WebPath" output="true" />
+                </div>
+            </div>
+            <div class="list-right-content">
+                <ul class="list-right-list">
+                    <vt:function var="newslist" type="$pageMethod" method="getPageNewsList" args="$siteid"
+                                 args="$itemid" args="$pagesize" args="$curpage" />
+                    <vt:foreach item="news" from="$newslist" index="i">
+                        <li><a title="{$news.Title}" target="_blank" href="<vt:if var="news.OutUrl" value='' compare='<>'>{$news.OutUrl}<vt:else />{$WebPath}/WebSite/{$siteid}/news/{$news.NewsId}.html</vt:if>">{$news.Title length="80"}</a>
+                            <span  class="pull-right">{$news.createtm format="yyyy-MM-dd"}</span></li>
+                    </vt:foreach>
+                </ul>
+            </div>
+            <div class="list-page">
+                <div class="fenye">
+                    <div class="pagination" id="Pagination">
+                        <!-- 这里显示分页 -->
+                    </div>
+                    <div id="message" style="font-size: 15px">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+
+
+
+
+
+
+    <!--右导航开始
+    <vt:include name="header" file="{$SiteFilePath}/right.tpl" />-->
+    <!--右导航结束-->
+
+    <!--页脚开始-->
+    <vt:include name="header" file="{$SiteFilePath}/footer.tpl" />
+    <!--页脚结束-->
+</div>
+
+</body>
+</html>
